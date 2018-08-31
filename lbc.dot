@@ -1,10 +1,10 @@
-digraph Couriers {
+digraph "LBC Architecture" {
 fontname = "Bitstream Vera Sans"
-fontsize = 8
+fontsize = 12
 
 node [
 fontname = "Bitstream Vera Sans"
-fontsize = 8
+fontsize = 12
 shape = "record"
 ]
 
@@ -23,6 +23,132 @@ label = "{MonotypeDelivery|\l|+ ship(): boolean\l}"
 Pigeon [
 label = "{PigeonPost|\l|+ ship(): boolean\l}"
 ]
+
+D_BRANCH[
+label = "{D_BRANCH|\l
+	+ BRANCH_CODE : bigint PK\l
+	}"
+]
+
+D_COUNTRY[
+label = "{D_COUNTRY|\l
+	+ COUNTRY_CODE : bigint PK\l
+	}"
+]
+
+ODS_BILLSXPRESS_PAYMENT_PEOPLE[
+label = "{ODS_BILLSXPRESS_PAYMENT_PEOPLE|
+	+ row_ref_id : bigint PK\l
+	+ BranchCode : varchar FK(D_BRANCH.BRANCH_CODE)|
+	+ CustName : varchar\l
+	+ CustAddress : varchar\l
+	+ Account No : varchar not null\l
+	+ ServiceNo: varchar\l
+	+ TotalAmount : money\l
+	+ ActualDate (trans date) : datetime\l}"
+]
+
+ODS_CCM_CRM_TBLCUSTOMERINFORMATION[
+label = "{ODS_CCM_CRM_TBLCUSTOMERINFORMATION|
+	+ id (customer id) : int PK\l
+	+ country : int FK(D_COUNTRY.COUNTRY_ID)\l|
+	+ first_name: varchar not null\l
+	+ email_address : varchar\l
+	+ contact_number : varchar not null\l
+	+ company_name : varchar\l
+	+ company_contact_no : varchar\l
+	+ street_1 : varchar not null\l
+	+ street_2 : varchar\l
+	+ city : varchar : varchar not null\l
+	+ state_region : varchar\l}"
+]
+
+ODS_DATASENDING_SALES_PEOPLE[
+label = "{ODS_DATASENDING_SALES_PEOPLE|
+	+ TrackingNo : bigint PK\l
+	+ BranchOriginID : varchar FK(D_BRANCH.BRANCH_ID)\l|
+	+ ActualDate : datetime\l
+	+ Shipper_ID : bigint \l
+    + Consignee_ID : bigint\l
+	+ CardNumber : bigint\l\l
+	+ CustLname : varchar\l
+	+ CustFname : varchar\l
+	+ CustMname : varchar\l
+	+ CustCompany : varchar\l
+	+ CustDepartment : varchar\l
+	+ CustCompanyType : varchar\l
+	+ CustStreet1 : varchar\l
+	+ CustStreet2 : varchar\l
+	+ CustBarangay : varchar\l
+	+ CustCity : varchar\l
+	+ CustProvince : varchar\l
+	+ CustArea : varchar\l
+	+ CustTelephone : varchar\l
+	+ CustTelephoneType : varchar\l
+	+ CustEmail : varchar\l
+	+ CustMobileNo : nvarchar\l\l
+	+ RcpLname : varchar\l
+	+ RcpFname : varchar\l
+	+ RcpMname : varchar\l
+	+ RcpCompany : varchar\l
+	+ RcpDepartment : varchar\l
+	+ RcpCompanyType : varchar\l
+	+ RcpStreet1 : varchar\l
+	+ RcpStreet2 : varchar\l
+	+ RcpBarangay : char\l
+	+ RcpCity : varchar\l
+	+ RcpProvince : varchar\l
+	+ RcpArea : varchar\l
+	+ RcpTelephone : varchar\l
+	+ RcpTelephoneType : varchar\l
+	+ RcpEmail : varchar\l
+	+ RcpMobileNo : nvarchar
+	\l}"
+]
+
+
+ODS_LBCEXPRESSCARD_CUSTOMERPHONE[
+label = "{ODS_LBCEXPRESSCARD_CUSTOMERPHONE|
+	+ CustomerID : bigint FK(ODS_LBCEXPRESSCARD_CUSTOMERHEADER.CustomerID)\l|
+	+ PhoneTypeID : int not null\l
+	+ PhoneNumber : varchar\l
+	}"
+]
+
+ODS_LBCEXPRESSCARD_CUSTOMERADDRESS[
+label = "{ODS_LBCEXPRESSCARD_CUSTOMERADDRESS|
+	+ CustomerID : bigint FK(ODS_LBCEXPRESSCARD_CUSTOMERHEADER.CustomerID)\l
+	+ CityID : int FK(D_CITY.CITY_ID)\l
+	+ IntCountry : int FK(D_COUNTRY.COUNTRY_ID)\l|
+	+ Street : varchar\l
+	+ Barangay : varchar\l
+	+ AddressType : tinyint\l
+	+ ZipCode : varchar\l
+	}"
+]
+
+ODS_LBCEXPRESSCARD_CUSTOMERHEADER[
+label = "{ODS_LBCEXPRESSCARD_CUSTOMERHEADER|
+	+ CustomerID : bigint PK\l|
+	+ FirstName : varchar\l
+	+ LastName : varchar\l
+	+ MiddleName : varchar\l
+	+ BirthDate : datetime\l
+	+ Gender : tinyint\l
+	+ Email : varchar\l
+	+ CivilStatus : char\l
+	+ zipCode : varchar\l
+	+ DateRegistered : datetime\l
+	}"
+]
+
+
+ODS_BILLSXPRESS_PAYMENT_PEOPLE -> D_BRANCH [dir=front]
+ODS_CCM_CRM_TBLCUSTOMERINFORMATION -> D_COUNTRY [dir=front]
+ODS_DATASENDING_SALES_PEOPLE -> D_BRANCH [dir=front]
+
+ODS_LBCEXPRESSCARD_CUSTOMERPHONE -> ODS_LBCEXPRESSCARD_CUSTOMERHEADER[dir=front]
+ODS_LBCEXPRESSCARD_CUSTOMERADDRESS -> ODS_LBCEXPRESSCARD_CUSTOMERHEADER[dir=front]
 
 Courier -> Pigeon [dir=back]
 Courier -> Monotype [dir=back]
